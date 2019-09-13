@@ -8,22 +8,27 @@ import {
   Row,
   Col,
   Button,
-  Modal
+  Modal,
+  Tag
 } from "antd";
 const { Meta } = Card;
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 class ImageGallery extends Component {
-  state = {
-    hover: false,
-    modalVisibility: false
-  };
   constructor(props) {
     super(props);
+    this.state = {
+      hover: false,
+      modalVisibility: false,
+      currentImage: this.props.images[0]
+    };
   }
 
-  onImageClick = () => {
-    this.setState({ modalVisibility: !this.state.modalVisibility });
+  onImageClick = image => {
+    this.setState({
+      modalVisibility: !this.state.modalVisibility,
+      currentImage: image
+    });
   };
 
   handleCancel = e => {
@@ -33,7 +38,7 @@ class ImageGallery extends Component {
     });
   };
   render() {
-    const { images } = this.props;
+    let { currentImage } = this.state;
     return (
       <Layout>
         <Content style={{ padding: "0 50px" }}>
@@ -49,6 +54,7 @@ class ImageGallery extends Component {
                   return (
                     <Col key={image.id} span={6}>
                       <div
+                        onClick={() => this.onImageClick(image)}
                         className="image"
                         key={image.id}
                         style={{
@@ -76,7 +82,7 @@ class ImageGallery extends Component {
                           style={{ float: "left", marginLeft: "10%" }}
                         />
                         <Button
-                          onClick={this.onImageClick}
+                          onClick={() => this.onImageClick(image)}
                           type="danger"
                           size="small"
                         >
@@ -89,34 +95,6 @@ class ImageGallery extends Component {
                           icon="download"
                           size="small"
                         />
-                        <Modal
-                        centered
-                          
-                          title="Basic Modal"
-                          visible={this.state.modalVisibility}
-                          onCancel={this.handleCancel}
-                          footer={[
-                            
-                            <Button
-                              key="ok"
-                              type="primary"
-                              size="large"
-                              onClick={() => this.onImageClick()}
-                            >
-                              Ok
-                            </Button>
-                          ]}
-                        >
-                        <img
-                          src={image.imageUrl}
-                          alt=""
-                          style={{
-                            height: "50%",
-                            width: "100%",
-                            alignContent: "center"
-                          }}
-                        />
-                        </Modal>
                       </div>
                     </Col>
                   );
@@ -124,11 +102,62 @@ class ImageGallery extends Component {
               </Row>
             </Content>
           </Layout>
+          <Modal
+            centered
+            title={currentImage.title + ", " + currentImage.location}
+            width="60%"
+            visible={this.state.modalVisibility}
+            onCancel={this.handleCancel}
+            footer={[
+              <Row>
+                <Col>
+                  <p>
+                    {currentImage.tags.map(tag => (
+                      <Tag style={{ float: "left" }} color="geekblue">
+                        {tag}
+                      </Tag>
+                    ))}
+                  </p>
+                </Col>
+                <Col>
+                  <Button
+                    key="ok"
+                    size="default"
+                    onClick={() => this.handleCancel()}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    style={{ float: "right" }}
+                    type="primary"
+                    shape="round"
+                    icon="download"
+                    size="default"
+                  />
+                </Col>
+              </Row>
+            ]}
+          >
+            <img
+              src={currentImage.imageUrl}
+              alt=""
+              style={{
+                height: "100%",
+                width: "100%",
+                alignContent: "center",
+                cursor: "pointer"
+              }}
+            />
+          </Modal>
         </Content>
         <style>
           {`
+          .ant-modal-wrap .ant-modal-centered{
+              color: black;
+          }
                .image:hover{
                 box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+                cursor: pointer;
                }
                `}
         </style>
