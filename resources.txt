@@ -1,0 +1,10 @@
+https://dropbox.github.io/nodegallerytutorial/
+https://towardsdatascience.com/image-tagging-with-keras-in-tensorflow-1-2-bc43c1058019
+https://www.pyimagesearch.com/2014/12/01/complete-guide-building-image-search-engine-python-opencv/
+https://medium.com/@650egor/simple-drag-and-drop-file-upload-in-react-2cb409d88929
+https://medium.com/@rossbulat/lazy-image-loading-in-react-the-full-breakdown-4026619de2df
+https://scotch.io/tutorials/how-to-optimize-node-requests-with-simple-caching-strategies
+https://github.com/adamokasha/snapsapp
+https://material-ui.com/components/grid-list/
+https://beginnersbook.com/2017/09/mongodb-indexing-tutorial-with-example/
+https://docs.mongodb.com/manual/indexes/

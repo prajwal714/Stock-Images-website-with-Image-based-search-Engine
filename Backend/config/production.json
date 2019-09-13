@@ -1,0 +1,6 @@
+{
+    "name":"Photosharing App - production",
+    "mail": {
+        "host": "prod-mail-server"
+    }
+}
