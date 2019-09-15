@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {Modal} from 'antd';
 import Navbar from "./navbar";
 import Carousel from './carousel';
 
@@ -7,6 +7,7 @@ import "antd/dist/antd.css";
 import "./CSS/navbar.css";
 import ImageGallery from './imageGallery';
 import PageFooter from './page_footer';
+import AddImage from "./addImage";
 
 
 const Data = {
@@ -69,15 +70,36 @@ const Data = {
 
 
 class LandingPage extends Component {
-  state = {};
+  state = {
+   modalVisibility: false
+  };
+
+  handleImageModal=()=>{
+    this.setState({modalVisibility: !this.state.modalVisibility});
+  }
+
+  handleCancel=()=>{
+    this.setState({ modalVisibility: false });
+  }
   render() {
     return (
       <div>
-        <Navbar ></Navbar>
+        <Navbar  handleImageModal={this.handleImageModal}></Navbar>
         <Carousel images={Data.CarouselImages}></Carousel>
         <ImageGallery images={Data.galleryImages}></ImageGallery>
         <PageFooter></PageFooter>
         {/* <Footer></Footer> */}
+        <Modal
+          centered
+          title="Add New Image"
+          width="60%"
+          visible={this.state.modalVisibility}
+          onCancel={this.handleCancel}
+          
+        >
+          
+        <AddImage></AddImage>
+        </Modal>
       </div>
     );
   }
