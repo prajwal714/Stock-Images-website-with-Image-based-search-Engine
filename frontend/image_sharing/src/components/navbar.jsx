@@ -1,14 +1,10 @@
 import { Layout, Menu, Breadcrumb, Icon, Button } from "antd";
-import Carousel from "./carousel";
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./CSS/navbar.css";
 import Search from "./search";
-import ImageGallery from "./imageGallery";
-import PageFooter from "./page_footer";
 
-const { SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
+const { Header} = Layout;
 
 class Navbar extends Component {
   state = {};

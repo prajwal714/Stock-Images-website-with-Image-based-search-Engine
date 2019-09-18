@@ -1,19 +1,18 @@
 import React, { Component } from "react";
 import {
   Layout,
-  Menu,
+  
   Breadcrumb,
   Icon,
-  Card,
+  
   Row,
   Col,
   Button,
   Modal,
   Tag
 } from "antd";
-const { Meta } = Card;
-const { SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
+
+const {Content } = Layout;
 class ImageGallery extends Component {
   constructor(props) {
     super(props);

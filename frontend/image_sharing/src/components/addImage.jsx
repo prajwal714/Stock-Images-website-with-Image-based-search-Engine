@@ -1,16 +1,20 @@
 import { Form, Select, Button, Upload, Icon } from "antd";
 import { Tag, Input, Tooltip } from "antd";
-
 import React, { Component } from "react";
+
+import Accept from "./dropzone";
+import DropImage from './dropImage';
 const { Option } = Select;
 const API_KEY ="00554df841258b6af7b7228ea673c99f";
 // const WrappedDemo = Form.create({ name: 'validate_other' })(Demo);
 
+
+const {Dragger}=Upload;
 class AddImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        image:null,
+        image:[],
       imageUrl: null,
       location: null,
       title: null,
@@ -21,6 +25,7 @@ class AddImage extends Component {
     };
   }
 
+   
 
     
   handleSubmit = e => {
@@ -68,39 +73,18 @@ class AddImage extends Component {
 
     setImages = (e) => {
       console.log(e);
-    }
+    };
 
   render() {
-    // const { getFieldDecorator } = this.props.form;
-      const props = {
-          name: 'file',
-          multiple: true,
-          action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-          
-          onChange(info) {
-
-              const { status } = info.file;
-              if (status !== 'uploading') {
-                  console.log(info.file, info.fileList);
-              }
-              if (status === 'done') {
-                  console.log(info);
-                  let url=info.file.response.url;
-                  console.log(`${info.file.name} file uploaded successfully.`);
-                  console.log(info.file.response.url);
-                  //this.setImages(url);
-                  
-                //   this.setState({imageUrl: info.file.response.url})
-              } else if (status === 'error') {
-                  console.log(`${info.file.name} file upload failed.`);
-              }
-          },
-      };
+     
     let { tags, inputVisible, inputValue } = this.state;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
     };
+
+   
+      
 
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -155,24 +139,8 @@ class AddImage extends Component {
         </Form.Item>
 
         <Form.Item label="Drag or Browse the Image">
-          {/* {getFieldDecorator("dragger", {
-            valuePropName: "fileList",
-            getValueFromEvent: this.normFile
-          })( */}
-          <Upload.Dragger {...props}
-            onChange={()=>this.setImages}
-          >
-            <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload.
-            </p>
-          </Upload.Dragger>
-          {/* )} */}
+          <DropImage></DropImage>
+         
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
