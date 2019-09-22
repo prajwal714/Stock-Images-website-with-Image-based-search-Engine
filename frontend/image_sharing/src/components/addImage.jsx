@@ -3,7 +3,8 @@ import { Tag, Input, Tooltip } from "antd";
 import React, { Component } from "react";
 
 import Accept from "./dropzone";
-import DropImage from './dropImage';
+import UploadImage from './uploadImage';
+
 const { Option } = Select;
 const API_KEY ="00554df841258b6af7b7228ea673c99f";
 // const WrappedDemo = Form.create({ name: 'validate_other' })(Demo);
@@ -139,7 +140,7 @@ class AddImage extends Component {
         </Form.Item>
 
         <Form.Item label="Drag or Browse the Image">
-          <DropImage></DropImage>
+          <UploadImage></UploadImage>
          
         </Form.Item>
 
