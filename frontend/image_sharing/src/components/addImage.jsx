@@ -1,15 +1,15 @@
-import { Form, Button,  Icon } from "antd";
+import { Form, Button, Icon } from "antd";
 import { Tag, Input, Tooltip, message } from "antd";
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import axios from 'axios';
+import axios from "axios";
 import UploadImage from "./uploadImage";
 
 const warning = msg => {
   message.warning(msg);
 };
 
-const success = (msg) => {
+const success = msg => {
   message.success(msg);
 };
 
@@ -56,25 +56,21 @@ class AddImage extends Component {
     }
     console.log("Submitted");
     success("Image Submitted successfully");
-    const params={
+    const params = {
       ...this.state.data
-    }
-    // axios.post("http://localhost:3001/upload",params)
-    // .then(());
+    };
 
-     axios.post(
-      'http://localhost:3001/upload',
-      params,
-      { headers: { 'Content-Type': 'application/json' } }
-    ).then((res)=>console.log(res.status))
-    .catch((err)=>console.log(err));
-
-
+    axios
+      .post("http://localhost:3001/api/images/upload", params, {
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => console.log(res.status))
+      .catch(err => console.log(err));
   };
 
   handleClose = removedTag => {
     const tags = this.state.data.tags.filter(tag => tag !== removedTag);
-    // console.log(tags);
+
     const data = { ...this.state.data };
     data["tags"] = tags;
     this.setState({ data });

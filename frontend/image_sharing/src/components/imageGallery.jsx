@@ -1,27 +1,24 @@
 import React, { Component } from "react";
-import {
-  Layout,
-  
-  Breadcrumb,
-  Icon,
-  
-  Row,
-  Col,
-  Button,
-  Modal,
-  Tag
-} from "antd";
-
-const {Content } = Layout;
+import { Layout, Breadcrumb, Icon, Row, Col, Button, Modal, Tag } from "antd";
+const { Content } = Layout;
+const DefaultImg={
+  title: "Default",
+  location: "Default",
+  tags: ["X", "Y", "Z"],
+  imageUrl:
+    "https://aliceasmartialarts.com/wp-content/uploads/2017/04/default-image.jpg"
+}
 class ImageGallery extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      hover: false,
-      modalVisibility: false,
-      currentImage: this.props.images[0]
-    };
   }
+  state = {
+    hover: false,
+    modalVisibility: false,
+    currentImage: DefaultImg
+      
+    
+  };
 
   onImageClick = image => {
     this.setState({
@@ -51,22 +48,23 @@ class ImageGallery extends Component {
               <Row>
                 {this.props.images.map(image => {
                   return (
-                    <Col key={image.id} span={6}>
+                    <Col key={image._id} span={6}>
                       <div
                         onClick={() => this.onImageClick(image)}
                         className="image"
-                        key={image.id}
+                        key={image._id}
                         style={{
                           padding: 10,
                           margin: 5,
-                          border: "1px solid rgba(0,0,0,0.16)"
+                          border: "1px solid rgba(0,0,0,0.16)",
+                          height: "40%"
                         }}
                       >
                         <img
                           src={image.imageUrl}
                           alt=""
                           style={{
-                            height: "50%",
+                            height: 200,
                             width: "100%",
                             alignContent: "center"
                           }}
@@ -101,10 +99,12 @@ class ImageGallery extends Component {
               </Row>
             </Content>
           </Layout>
+         
           <Modal
             centered
-            title={currentImage.title + ", " + currentImage.location}
+            title={currentImage.title + ", " + currentImage.location || null}
             width="60%"
+            height="90%"
             visible={this.state.modalVisibility}
             onCancel={this.handleCancel}
             footer={[
@@ -112,10 +112,11 @@ class ImageGallery extends Component {
                 <Col>
                   <p>
                     {currentImage.tags.map(tag => (
-                      <Tag style={{ float: "left" }} color="geekblue">
-                        {tag}
-                      </Tag>
-                    ))}
+                          <Tag style={{ float: "left" }} color="geekblue">
+                            {tag}
+                          </Tag>
+                        ))
+                      }
                   </p>
                 </Col>
                 <Col>
@@ -148,6 +149,7 @@ class ImageGallery extends Component {
               }}
             />
           </Modal>
+          
         </Content>
         <style>
           {`
