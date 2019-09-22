@@ -66,7 +66,9 @@ const Data = {
 };
 
 router.post("/upload", (req, res) => {
-  console.log(req.body);
+  const {image}={...req.body,id: Data.galleryImages.length+1};
+  Data.galleryImages.push(image);
+  console.log(Data.galleryImages);
   console.log("image uploaded successfully");
   res.status(200).send("Success");
 });
