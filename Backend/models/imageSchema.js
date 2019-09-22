@@ -1,18 +1,23 @@
-const mongoose=require("mongoose");
-const Schema=mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-var ImageSchema=new Schema({
-    imageName: {
-        type: String,
-        default: none,
-        required: true
-    },
-    imageDate:{
-        type: String,
-        required: true
-    }
+var ImageSchema = new Schema({
+  title: {
+    type: String,
+
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
+  tags: { type: Array, required: true },
+  imageUrl: {
+    type: String,
+    required: true
+  }
 });
 
-var Image=mongoose.model('Image',ImageSchema);
+var Image = mongoose.model("Image", ImageSchema);
 
-module.exports=Image;
+module.exports = Image;

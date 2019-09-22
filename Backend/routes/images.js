@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-
+const mongoose = require("Mongoose");
+const image = require("../models/imageSchema");
 const Joi = require("joi");
-
 
 const Data = {
   CarouselImages: [
@@ -66,21 +66,28 @@ const Data = {
 };
 
 router.post("/upload", (req, res) => {
-  console.log(req.body);
-  console.log("image uploaded successfully");
-  res.status(200).send("Success");
+  image
+    .create(req.body)
+    .then(img => {
+      console.log(img);
+      console.log("image uploaded successfully");
+      res.status(200).send("Success");
+    })
+    .catch(err => console.log(err));
 });
 
-router.get("/upload",(req,res)=>{
+router.get("/upload", (req, res) => {
   console.log("GET request");
   res.send("GET uploads");
-})
-
-
-router.get("/", (req, res) => {
-  res.send(Data.galleryImages);
 });
 
+router.get("/", (req, res) => {
+  image.find({}, (err,allImages) => {
+    if (err)  console.log(err);
+    else
+    res.send(allImages);
+  });
+});
 
 router.get("/:id", (req, res) => {
   let image = Data.galleryImages.find(i => i._id === parseInt(req.params.id));
@@ -91,12 +98,12 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  let { error } = validateImage(req.body);
+  // let { error } = validateImage(req.body);
 
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  // if (error) {
+  //   res.status(400).send(error.details[0].message);
+  //   return;
+  // }
 
   const newImage = {
     _id: Data.galleryImages.length + 1,

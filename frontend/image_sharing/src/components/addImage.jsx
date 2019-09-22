@@ -1,101 +1,163 @@
-import { Form, Select, Button, Upload, Icon } from "antd";
-import { Tag, Input, Tooltip } from "antd";
+import { Form, Button, Icon } from "antd";
+import { Tag, Input, Tooltip, message } from "antd";
 import React, { Component } from "react";
+import Joi from "joi-browser";
+import axios from "axios";
+import UploadImage from "./uploadImage";
 
-import Accept from "./dropzone";
-import UploadImage from './uploadImage';
+const warning = msg => {
+  message.warning(msg);
+};
 
-const { Option } = Select;
-const API_KEY ="00554df841258b6af7b7228ea673c99f";
-// const WrappedDemo = Form.create({ name: 'validate_other' })(Demo);
+const success = msg => {
+  message.success(msg);
+};
 
-
-const {Dragger}=Upload;
 class AddImage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        image:[],
+  state = {
+    data: {
       imageUrl: null,
       location: null,
       title: null,
-      tags: [],
-      showModal: false,
-      inputVisible: false,
-      inputValue: ""
-    };
-  }
+      tags: []
+    },
+    errors: {},
 
-   
-
-    
-  handleSubmit = e => {
-    e.preventDefault();
-    console.log("values:", this.props.form);
+    showModal: false,
+    inputVisible: false,
+    inputValue: ""
   };
 
-  normFile = e => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
+  imageSchema = {
+    title: Joi.string()
+      .required()
+      .label("Title"),
+    location: Joi.string()
+      .required()
+      .label("Location"),
+    tags: Joi.array()
+      .items(Joi.string())
+      .min(2)
+      .required(),
+    imageUrl: Joi.string()
+      .required()
+      .label("Image URL")
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const errors = this.validateInput();
+    this.setState({ errors: errors || {} });
+
+    if (errors) {
+      console.log(errors);
+      warning(errors);
+      return;
     }
-    return e && e.fileList;
+    console.log("Submitted");
+    success("Image Submitted successfully");
+    const params = {
+      ...this.state.data
+    };
+
+    axios
+      .post("http://localhost:3001/api/images/upload", params, {
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => console.log(res.status))
+      .catch(err => console.log(err));
   };
 
   handleClose = removedTag => {
-    const tags = this.state.tags.filter(tag => tag !== removedTag);
-    console.log(tags);
-    this.setState({ tags });
+    const tags = this.state.data.tags.filter(tag => tag !== removedTag);
+
+    const data = { ...this.state.data };
+    data["tags"] = tags;
+    this.setState({ data });
   };
 
   showInput = () => {
     this.setState({ inputVisible: true }, () => this.input.focus());
   };
 
-  handleInputChange = e => {
-    this.setState({ inputValue: e.target.value });
+  handleInputChange = ({ currentTarget: input }) => {
+    let key = input.name;
+    if (key === "tag") {
+      this.setState({ inputValue: input.value });
+    } else {
+      const state = { ...this.state };
+      state.data[input.name] = input.value;
+
+      this.setState({ state });
+      // console.log("Current State: ", this.state);
+    }
   };
 
   handleInputConfirm = () => {
     const { inputValue } = this.state;
-    let { tags } = this.state;
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue];
+    const data = { ...this.state.data };
+    if (inputValue && data.tags.indexOf(inputValue) === -1) {
+      data["tags"] = [...data.tags, inputValue];
     }
-    console.log(tags);
+    // console.log(data.tags);
     this.setState({
-      tags,
       inputVisible: false,
       inputValue: ""
     });
+
+    this.setState({ data });
   };
 
   saveInputRef = input => (this.input = input);
 
-    setImages = (e) => {
-      console.log(e);
-    };
+  handleImageUrl = url => {
+    console.log("Image URL: ", url);
+    const data = { ...this.state.data };
+    data["imageUrl"] = url;
+    this.setState({ data });
+  };
+
+  validateInput = () => {
+    const { data } = this.state;
+    console.log(data);
+    const { error } = Joi.validate(data, this.imageSchema);
+
+    if (!error) return null;
+    const errors = {};
+
+    return error.details[0].message;
+  };
 
   render() {
-     
-    let { tags, inputVisible, inputValue } = this.state;
+    let { inputVisible, inputValue } = this.state;
+    let { tags, title, location, imageUrl } = this.state.data;
+    let { errors } = this.state;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
     };
 
-   
-      
-
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Form.Item label="Title" {...formItemLayout}>
-          <Input placeholder="Enter Title for image" />
+        <Form.Item name="ltitle" label="Title">
+          <Input
+            error={errors.title}
+            name="title"
+            placeholder="Enter Title for image"
+            onChange={this.handleInputChange}
+          />
         </Form.Item>
-        <Form.Item label="Location" {...formItemLayout}>
-          <Input placeholder="Enter Location..." />
+
+        <Form.Item name="location" label="Location">
+          <Input
+            error={errors.location}
+            name="location"
+            placeholder="Enter Location..."
+            onChange={this.handleInputChange}
+          />
         </Form.Item>
-        <Form.Item label="Tags">
+
+        <Form.Item name="tags" label="Tags">
           <div>
             {tags.map((tag, index) => {
               const isLongTag = tag.length > 20;
@@ -119,11 +181,12 @@ class AddImage extends Component {
             {inputVisible && (
               <Input
                 ref={this.saveInputRef}
+                name="tag"
                 type="text"
                 size="small"
                 style={{ width: 78 }}
                 value={inputValue}
-                onChange={this.handleInputChange}
+                onChange={e => this.handleInputChange(e)}
                 onBlur={this.handleInputConfirm}
                 onPressEnter={this.handleInputConfirm}
               />
@@ -139,9 +202,8 @@ class AddImage extends Component {
           </div>
         </Form.Item>
 
-        <Form.Item label="Drag or Browse the Image">
-          <UploadImage></UploadImage>
-         
+        <Form.Item label="Drag or Browse the Image" required>
+          <UploadImage handleImageUrl={this.handleImageUrl}></UploadImage>
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
@@ -154,5 +216,4 @@ class AddImage extends Component {
   }
 }
 
-// const WrappedDemo = Form.create({ name: 'validate_other' })(Demo);
 export default AddImage;

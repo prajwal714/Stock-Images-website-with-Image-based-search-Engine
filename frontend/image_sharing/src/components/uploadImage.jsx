@@ -43,6 +43,8 @@ class UploadImage extends Component {
   };
 
   uploadImage=(e)=>{
+
+    const {handleImageUrl}=this.props;
     this.setState({error: null});
     const Type=['image/jpeg','image/png','image/jpg'];
     if(Type.every((type)=>type!==e.target.files[0].type))
@@ -52,7 +54,6 @@ class UploadImage extends Component {
       return;
     }
 
-    console.log(e.target.files[0]);
 
     let currentImageName = "firebase-image-" + Date.now();
     let uploadImage = storage.ref(`images/${currentImageName}`).put(e.target.files[0]);
@@ -63,7 +64,6 @@ class UploadImage extends Component {
         let progress=(snapshot.bytesTransferred/snapshot.totalBytes)*100;
         progress=Math.round(progress);
         this.setState({percent: progress});
-        console.log(snapshot.downloadURL);
       },
       err => {
         alert(err);
@@ -80,6 +80,7 @@ class UploadImage extends Component {
               firebaseImage: url,
               imageName: currentImageName
             });
+            handleImageUrl(url);
           });
           // console.log(uploadImage.snapshot.downloadURL);
       }
@@ -101,7 +102,7 @@ class UploadImage extends Component {
     );
     return (
       <div>
-        <input type="file" name="file" onChange={(e)=>this.uploadImage(e)} />
+        <input type="file" name="imageUrl"  onChange={(e)=>this.uploadImage(e)} />
         {!this.state.error? 
         <>
         <Progress type="circle" percent={this.state.percent} width={80} />
