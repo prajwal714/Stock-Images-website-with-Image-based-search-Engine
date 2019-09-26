@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { Layout, Breadcrumb, Icon, Row, Col, Button, Modal, Tag } from "antd";
+import axios  from 'axios';
 const { Content } = Layout;
-const DefaultImg={
+const DefaultImg = {
+  _id: -1,
   title: "Default",
   location: "Default",
   tags: ["X", "Y", "Z"],
   imageUrl:
     "https://aliceasmartialarts.com/wp-content/uploads/2017/04/default-image.jpg"
-}
+};
 class ImageGallery extends Component {
   constructor(props) {
     super(props);
@@ -16,10 +18,13 @@ class ImageGallery extends Component {
     hover: false,
     modalVisibility: false,
     currentImage: DefaultImg
-      
-    
   };
-
+  handleDeleteImage = id => {
+    axios
+      .delete("http://localhost:3001/api/images/" + id)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
   onImageClick = image => {
     this.setState({
       modalVisibility: !this.state.modalVisibility,
@@ -91,7 +96,11 @@ class ImageGallery extends Component {
                           shape="round"
                           icon="download"
                           size="small"
-                        />
+                          download
+                          href={image.imageUrl}
+                        >
+                          <a href={image.imageUrl} download hidden></a>
+                        </Button>
                       </div>
                     </Col>
                   );
@@ -99,7 +108,7 @@ class ImageGallery extends Component {
               </Row>
             </Content>
           </Layout>
-         
+
           <Modal
             centered
             title={currentImage.title + ", " + currentImage.location || null}
@@ -112,14 +121,21 @@ class ImageGallery extends Component {
                 <Col>
                   <p>
                     {currentImage.tags.map(tag => (
-                          <Tag style={{ float: "left" }} color="geekblue">
-                            {tag}
-                          </Tag>
-                        ))
-                      }
+                      <Tag style={{ float: "left" }} color="geekblue">
+                        {tag}
+                      </Tag>
+                    ))}
                   </p>
                 </Col>
                 <Col>
+                  <Button
+                    key="delete"
+                    size="default"
+                    type="danger"
+                    onClick={this.handleDeleteImage(currentImage._id)}
+                  >
+                    Delete
+                  </Button>
                   <Button
                     key="ok"
                     size="default"
@@ -149,7 +165,6 @@ class ImageGallery extends Component {
               }}
             />
           </Modal>
-          
         </Content>
         <style>
           {`

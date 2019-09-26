@@ -91,14 +91,14 @@ class LandingPage extends Component {
       .catch(err => console.log(err));
 
   }
-  componentDidUpdate() {
-    axios
-      .get("http://localhost:3001/api/images/")
-      .then(images => {
-        this.setState({ galleryImages: images.data });
-      })
-      .catch(err => console.log(err));
-    }
+  // componentDidUpdate() {
+  //   axios
+  //     .get("http://localhost:3001/api/images/")
+  //     .then(images => {
+  //       this.setState({ galleryImages: images.data });
+  //     })
+  //     .catch(err => console.log(err));
+  //   }
     
   handleImageModal = () => {
     this.setState({ modalVisibility: !this.state.modalVisibility });

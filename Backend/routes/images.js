@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("Mongoose");
-const image = require("../models/imageSchema");
+const images = require("../models/imageSchema");
 const Joi = require("joi");
 
 const Data = {
@@ -66,7 +66,7 @@ const Data = {
 };
 
 router.post("/upload", (req, res) => {
-  image
+  images
     .create(req.body)
     .then(img => {
       console.log(img);
@@ -82,40 +82,18 @@ router.get("/upload", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  image.find({}, (err,allImages) => {
-    if (err)  console.log(err);
-    else
-    res.send(allImages);
+  images.find({}, (err, allImages) => {
+    if (err) console.log(err);
+    else res.send(allImages);
   });
 });
 
 router.get("/:id", (req, res) => {
-  let image = Data.galleryImages.find(i => i._id === parseInt(req.params.id));
+  let image = images.find(i => i._id === parseInt(req.params.id));
 
   if (!image) res.status(404).send("The Image with given id not found");
 
   res.send(image);
-});
-
-router.post("/", (req, res) => {
-  // let { error } = validateImage(req.body);
-
-  // if (error) {
-  //   res.status(400).send(error.details[0].message);
-  //   return;
-  // }
-
-  const newImage = {
-    _id: Data.galleryImages.length + 1,
-    imageUrl: req.body.url,
-    tags: req.body.tags,
-    title: req.body.caption,
-    //author: req.body.author,
-    location: req.body.place
-  };
-  images.push(newImage);
-  console.log("New Image pushed...");
-  res.redirect("/api/images");
 });
 
 router.put("/:id", (req, res) => {
@@ -136,14 +114,17 @@ router.put("/:id", (req, res) => {
   }
 });
 
-router.delete("/api/images/:id", (req, res) => {
-  let image = images.find(i => i._id === parseInt(req.params.id));
-  if (!image) return res.status(404).send("The Image to be updated not found!");
+router.delete("/:id", (req, res) => {
+  console.log(req.params.id);
+  images
+    .findByIdAndRemove(req.params.id)
+    .then(foundImg => console.log("deleted image" + foundImg))
+    .then(res.send(200).message("Image Deleted Successfully"))
+    .catch(err => console.log("There was error deleting the image", err));
+ // if (!image) return res.status(404).send("The Image to be updated not found!");
 
-  let index = images.indexOf(image);
-  images.splice(index, 1);
-  console.log("Deleted course... ");
-  res.send(image);
+  
+  
 });
 
 function validateImage(image) {
