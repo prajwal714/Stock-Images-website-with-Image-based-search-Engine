@@ -1,3 +1,4 @@
+
 const config = require("config");
 const startupDebugger = require("debug")("app:startup");
 const dbDebugger = require("debug")("app:db");
@@ -9,10 +10,12 @@ const mongoose = require("mongoose");
 const app = express();
 
 //Routes
+const auth=require("./routes/auth");
 const images = require("./routes/images");
 const users=require('./routes/users');
 const home = require("./routes/home");
 const uploadImage = require("./routes/uploadImage");
+
 //default view engines
 app.set("view engine", "pug");
 app.set("views", "./views");
@@ -22,6 +25,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(helmet());
 app.use(cors());
+
+if(!config.get('jwtPrivateKey')){
+  console.log("JWT private key not defined");
+  process.exit(1);
+}
 
 mongoose
   .connect("mongodb://localhost/image_sharing_app", {
@@ -43,6 +51,7 @@ if (app.get("env") === "development") {
 }
 
 app.use("/", home);
+app.use(auth);
 app.use("/api/images", images);
 app.use(users);
 app.use("/", uploadImage);

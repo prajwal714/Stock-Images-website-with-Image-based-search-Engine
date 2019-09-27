@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("Mongoose");
+const mongoose = require("mongoose");
 const images = require("../models/imageSchema");
-const Joi = require("joi");
+const {User} = require("../models/userSchema");
 
+const Joi = require("joi");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const Data = {
   CarouselImages: [
     {
@@ -75,10 +78,17 @@ router.post("/upload", (req, res) => {
     })
     .catch(err => console.log(err));
 });
+router.get("/me", auth,async (req, res) => {
+  console.log(req.user);
+  const user=await User.findById(req.user._id).select("-password");
+  console.log(user);
+  res.send(JSON.stringify(user));
+});
 
-router.get("/upload", (req, res) => {
-  console.log("GET request");
-  res.send("GET uploads");
+router.get("/testAuth", [auth, admin], (req, res) => {
+  console.log(req.user);
+  console.log("This is secret page");
+  res.status(200).send("You passed authentication");
 });
 
 router.get("/", (req, res) => {
@@ -121,10 +131,7 @@ router.delete("/:id", (req, res) => {
     .then(foundImg => console.log("deleted image" + foundImg))
     .then(res.send(200).message("Image Deleted Successfully"))
     .catch(err => console.log("There was error deleting the image", err));
- // if (!image) return res.status(404).send("The Image to be updated not found!");
-
-  
-  
+  // if (!image) return res.status(404).send("The Image to be updated not found!");
 });
 
 function validateImage(image) {
