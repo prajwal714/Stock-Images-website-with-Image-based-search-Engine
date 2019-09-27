@@ -1,3 +1,4 @@
 {
-    "name":"Photosharing App"
+    "name":"Photosharing App",
+    "jwtPrivateKey": ""
 }

@@ -1,6 +1,8 @@
 {
     "mail": {
         "password":"app_password" 
-    }
+    },
+    "jwtPrivateKey": "image_sharing_jwtprivatekey"
 }
 //we set password via environment variables export app_password=12345
+//we set private key to mysecurekey, export image_sharing_jwtprovatekey=mysecurekey
