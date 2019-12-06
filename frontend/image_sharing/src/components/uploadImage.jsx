@@ -106,7 +106,7 @@ class UploadImage extends Component {
         {!this.state.error? 
         <>
         <Progress type="circle" percent={this.state.percent} width={80} />
-        <img src={this.state.firebaseImage} alt="upload-img" style={{width: 200, height: "auto"}}/>
+        <img  ref={this.props.imageRef} id="upload-img" src={this.state.firebaseImage} alt="upload-img" style={{width: 200, height: "auto"}}/>
         </>
         :
        <div>{this.state.error}</div>

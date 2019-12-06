@@ -3,6 +3,7 @@ import { Tag, Input, Tooltip, message } from "antd";
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import axios from "axios";
+import * as ml5 from "ml5";
 import UploadImage from "./uploadImage";
 
 const warning = msg => {
@@ -14,6 +15,10 @@ const success = msg => {
 };
 
 class AddImage extends Component {
+  constructor(props) {
+    super(props);
+    this.imageRef = React.createRef();
+  }
   state = {
     data: {
       imageUrl: null,
@@ -21,8 +26,9 @@ class AddImage extends Component {
       title: null,
       tags: []
     },
+    
     errors: {},
-
+    predictions: [],
     showModal: false,
     inputVisible: false,
     inputValue: ""
@@ -44,6 +50,31 @@ class AddImage extends Component {
       .label("Image URL")
   };
 
+  setPredictions = pred => {
+    this.setState({
+      predictions: pred
+    });
+  };
+
+  classifyImage = () => {
+    const classifier = ml5.imageClassifier("MobileNet", modelLoaded);
+    function modelLoaded() {
+      console.log("Model Loaded");
+    }
+    const image = this.imageRef.current;
+    console.log(image);
+    console.log("Image: ",image);
+    classifier
+      .predict(image, 5, (err, res) => {
+        return res;
+      })
+      .then(res => {
+        console.log(res);
+        this.setPredictions(res);
+      })
+      .catch(err => console.log(err));
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const errors = this.validateInput();
@@ -59,7 +90,7 @@ class AddImage extends Component {
     const params = {
       ...this.state.data
     };
-
+    this.classifyImage();
     axios
       .post("http://localhost:3001/api/images/upload", params, {
         headers: { "Content-Type": "application/json" }
@@ -203,7 +234,7 @@ class AddImage extends Component {
         </Form.Item>
 
         <Form.Item label="Drag or Browse the Image" required>
-          <UploadImage handleImageUrl={this.handleImageUrl}></UploadImage>
+          <UploadImage handleImageUrl={this.handleImageUrl} imageRef={this.imageRef}></UploadImage>
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
