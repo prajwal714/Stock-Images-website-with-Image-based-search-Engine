@@ -1,4 +1,4 @@
-export default Data = {
+const Data = {
     CarouselImages: [
         {
             downloadUrl:
@@ -59,3 +59,4 @@ export default Data = {
     ]
 };
 
+export default Data;

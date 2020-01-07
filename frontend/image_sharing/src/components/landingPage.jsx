@@ -7,7 +7,7 @@ import "antd/dist/antd.css";
 import "./CSS/navbar.css";
 import ImageGallery from "./imageGallery";
 import PageFooter from "./page_footer";
-import AddImage from "./addImage";
+import AddImage from "./addImageForm";
 
 
 
@@ -18,16 +18,7 @@ const LandingPage = (props) => {
 
   return ( 
     <div>
-
-      <Modal
-        centered
-        title="Add New Image"
-        width="60%"
-        visible={modalVisibility}
-        onCancel={handleCancel}
-      >
-        <AddImage></AddImage>
-      </Modal>
+    <h1>Welcome to landing page</h1>
     </div>
    );
 }

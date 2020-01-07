@@ -26,10 +26,10 @@ app.use(express.static("public"));
 app.use(helmet());
 app.use(cors());
 
-if(!config.get('jwtPrivateKey')){
-  console.log("JWT private key not defined");
-  process.exit(1);
-}
+// if(!config.get('jwtPrivateKey')){
+//   console.log("JWT private key not defined");
+//   process.exit(1);
+// }
 
 mongoose
   .connect("mongodb://localhost/image_sharing_app", {

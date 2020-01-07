@@ -93,26 +93,22 @@ class UploadImage extends Component {
 
   render() {
     const { previewImage, previewVisible, fileList } = this.state;
-    
-    const uploadButton = (
-      <div>
-        <Icon type="plus"></Icon>
-        <div className="ant-upload-next">Upload</div>
-      </div>
-    );
+  
     return (
       <div>
-        <input type="file" name="imageUrl"  onChange={(e)=>this.uploadImage(e)} />
-        {!this.state.error? 
-        <>
+        <input type="file" name="imageUrl"  onChange={(e)=>this.uploadImage(e)} style={{"display":"inline"}}/>
+        {!this.state.error&&(
+          <>
         <Progress type="circle" percent={this.state.percent} width={80} />
         <img  ref={this.props.imageRef} id="upload-img" src={this.state.firebaseImage} alt="upload-img" style={{width: 200, height: "auto"}}/>
-        </>
-        :
-       <div>{this.state.error}</div>
-        
-        
-        }
+       </>)}
+       {
+         this.state.error&&(
+           <>
+           <h3>this.state.error</h3>
+           </>
+         )
+       }
        
       </div>
     );

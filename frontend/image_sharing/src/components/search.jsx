@@ -10,8 +10,8 @@ class Search extends Component {
             dropdownClassName="certain-category-search-dropdown"
             dropdownMatchSelectWidth={false}
             dropdownStyle={{ width: 200 }}
-            size="large"
-            style={{ width: '20%', marginLeft: '80%'}}
+            size="medium"
+            
             dataSource={options}
             placeholder="input here"
             optionLabelProp="value"
