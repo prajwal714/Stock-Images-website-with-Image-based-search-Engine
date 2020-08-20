@@ -9,7 +9,7 @@
   "author": "Prajwal",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "config": "^3.2.2",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
